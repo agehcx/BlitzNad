@@ -6,7 +6,7 @@ async function main() {
   // Get deployer account
   const [deployer] = await ethers.getSigners();
   console.log("Deploying contracts with account:", deployer.address);
-  console.log("Account balance:", ethers.formatEther(await deployer.provider.getBalance(deployer.address)));
+  console.log("Account balance:", await ethers.provider.getBalance(deployer.address));
 
   // Deploy GameToken
   console.log("\n1. Deploying GameToken...");
@@ -19,7 +19,8 @@ async function main() {
   // Deploy Arena (using deployer as initial oracle for now)
   console.log("\n2. Deploying Arena...");
   const ArenaFactory = await ethers.getContractFactory("Arena");
-  const arena = await ArenaFactory.deploy(gameTokenAddress, deployer.address);
+  // Use deployer address as initial mempool address - can be updated later
+  const arena = await ArenaFactory.deploy(gameTokenAddress, deployer.address, deployer.address);
   await arena.waitForDeployment();
   const arenaAddress = await arena.getAddress();
   console.log("Arena deployed to:", arenaAddress);
@@ -50,12 +51,14 @@ async function main() {
   console.log(`Arena: ${arenaAddress}`);
   console.log(`Badges: ${badgesAddress}`);
   console.log(`Oracle: ${deployer.address}`);
+  console.log(`Mempool: ${deployer.address}`);
 
   console.log("\nNext steps:");
   console.log("1. Update .env file with deployed contract addresses");
   console.log("2. Configure oracle service with the oracle private key");
-  console.log("3. Start the backend service");
-  console.log("4. Launch the frontend application");
+  console.log("3. Set up a dedicated mempool address for entry fees (optional)");
+  console.log("4. Start the backend service");
+  console.log("5. Launch the frontend application");
 
   // Save deployment info
   const deploymentInfo = {
@@ -65,6 +68,7 @@ async function main() {
     arena: arenaAddress,
     badges: badgesAddress,
     oracle: deployer.address,
+    mempool: deployer.address,
     deployer: deployer.address,
     deployedAt: new Date().toISOString(),
     blockNumber: await ethers.provider.getBlockNumber()

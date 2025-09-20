@@ -1,6 +1,7 @@
 {
   "name": "blitznad-code-arena",
   "version": "1.0.0",
+  "private": true,
   "description": "Ultimate PvP coding battles on Monad testnet with BlitzNad",
   "scripts": {
     "build": "npm run build:contracts && npm run build:frontend && npm run build:backend",

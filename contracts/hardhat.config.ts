@@ -15,6 +15,12 @@ const config: HardhatUserConfig = {
       },
     },
   },
+  paths: {
+    sources: "./src",
+    artifacts: "./artifacts",
+    cache: "./cache",
+    tests: "./test",
+  },
   networks: {
     hardhat: {
       chainId: 1337,
@@ -22,8 +28,8 @@ const config: HardhatUserConfig = {
     monad_testnet: {
       url: "https://testnet-rpc.monad.xyz",
       accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
-      chainId: 41454, // Official Monad testnet chain ID
-      gasPrice: 1000000000, // 1 gwei
+      chainId: 10143, // Correct Monad testnet chain ID
+      gasPrice: 10000000000, // 10 gwei - increased from 1 gwei
       timeout: 60000,
     },
   },
@@ -35,7 +41,7 @@ const config: HardhatUserConfig = {
     customChains: [
       {
         network: "monad_testnet",
-        chainId: 41454,
+        chainId: 10143,
         urls: {
           apiURL: "https://testnet-explorer.monad.xyz/api",
           browserURL: "https://testnet-explorer.monad.xyz",
@@ -48,7 +54,5 @@ const config: HardhatUserConfig = {
     currency: "USD",
   },
 };
-
-export default config;
 
 export default config;

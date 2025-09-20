@@ -18,10 +18,12 @@ contract Arena is ReentrancyGuard, Pausable, Ownable {
     
     IERC20 public immutable gameToken;
     address public oracle;
+    address public mempool; // Main mempool address for entry fees
     
     uint256 public protocolFeeBps = 250; // 2.5%
     uint256 public constant MAX_PROTOCOL_FEE_BPS = 1000; // 10% max
     uint256 public constant MATCH_TIMEOUT = 1 hours;
+    uint256 public constant ENTRY_FEE = 0.025 ether; // 0.025 MON in wei
     
     enum MatchStatus {
         Created,
@@ -77,8 +79,10 @@ contract Arena is ReentrancyGuard, Pausable, Ownable {
     );
     event MatchCancelled(bytes32 indexed matchId, string reason);
     event MatchRefunded(bytes32 indexed matchId, address indexed player, uint256 amount);
+    event EntryFeePaid(address indexed player, bytes32 indexed matchId, uint256 amount);
     
     event OracleUpdated(address indexed oldOracle, address indexed newOracle);
+    event MempoolUpdated(address indexed oldMempool, address indexed newMempool);
     event ProtocolFeeUpdated(uint256 oldFee, uint256 newFee);
     event TreasuryWithdrawal(address indexed to, uint256 amount);
     
@@ -92,12 +96,14 @@ contract Arena is ReentrancyGuard, Pausable, Ownable {
         _;
     }
     
-    constructor(address _gameToken, address _oracle) {
+    constructor(address _gameToken, address _oracle, address _mempool) {
         require(_gameToken != address(0), "Arena: invalid game token");
         require(_oracle != address(0), "Arena: invalid oracle");
+        require(_mempool != address(0), "Arena: invalid mempool");
         
         gameToken = IERC20(_gameToken);
         oracle = _oracle;
+        mempool = _mempool;
     }
     
     /**
@@ -142,7 +148,7 @@ contract Arena is ReentrancyGuard, Pausable, Ownable {
     /**
      * @dev Join an existing match
      */
-    function joinMatch(bytes32 matchId) external nonReentrant whenNotPaused validMatchId(matchId) {
+    function joinMatch(bytes32 matchId) external payable nonReentrant whenNotPaused validMatchId(matchId) {
         Match storage match_ = matches[matchId];
         
         require(match_.status == MatchStatus.Created, "Arena: match not available");
@@ -151,6 +157,11 @@ contract Arena is ReentrancyGuard, Pausable, Ownable {
             block.timestamp <= match_.createdAt + MATCH_TIMEOUT,
             "Arena: match expired"
         );
+        require(msg.value == ENTRY_FEE, "Arena: incorrect entry fee");
+        
+        // Transfer entry fee to mempool
+        (bool success, ) = mempool.call{value: msg.value}("");
+        require(success, "Arena: entry fee transfer failed");
         
         // Transfer stake to contract
         gameToken.safeTransferFrom(msg.sender, address(this), match_.stakeAmount);
@@ -159,6 +170,7 @@ contract Arena is ReentrancyGuard, Pausable, Ownable {
         match_.opponent = msg.sender;
         match_.status = MatchStatus.Joined;
         
+        emit EntryFeePaid(msg.sender, matchId, msg.value);
         emit MatchJoined(matchId, msg.sender);
         emit MatchStarted(matchId);
     }
@@ -282,6 +294,18 @@ contract Arena is ReentrancyGuard, Pausable, Ownable {
     }
     
     /**
+     * @dev Update mempool address
+     */
+    function updateMempool(address newMempool) external onlyOwner {
+        require(newMempool != address(0), "Arena: invalid mempool address");
+        
+        address oldMempool = mempool;
+        mempool = newMempool;
+        
+        emit MempoolUpdated(oldMempool, newMempool);
+    }
+    
+    /**
      * @dev Update protocol fee
      */
     function updateProtocolFee(uint256 newFeeBps) external onlyOwner {
@@ -327,5 +351,19 @@ contract Arena is ReentrancyGuard, Pausable, Ownable {
      */
     function getMatch(bytes32 matchId) external view returns (Match memory) {
         return matches[matchId];
+    }
+    
+    /**
+     * @dev Get entry fee amount
+     */
+    function getEntryFee() external pure returns (uint256) {
+        return ENTRY_FEE;
+    }
+    
+    /**
+     * @dev Get mempool address
+     */
+    function getMempool() external view returns (address) {
+        return mempool;
     }
 }

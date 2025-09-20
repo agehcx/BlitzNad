@@ -23,9 +23,9 @@ export function Navbar() {
             <Link href="/leaderboard" className="text-slate-300 hover:text-white transition-colors font-medium">
               Leaderboard
             </Link>
-            <Link href="/profile" className="text-slate-300 hover:text-white transition-colors font-medium">
+            {/* <Link href="/profile" className="text-slate-300 hover:text-white transition-colors font-medium">
               Profile
-            </Link>
+            </Link> */}
           </nav>
           
           {/* Right - Wallet Connection */}

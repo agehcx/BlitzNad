@@ -1,76 +1,64 @@
-# BlitzNad Code Arena
+# ⚡ BlitzNad Code Arena  
 
-A lightning-fast PvP coding platform built on the Monad testnet (EVM-compatible). Players compete in intense coding battles while staking tokens, with fair resolution via oracle verifiers and instant on-chain rewards.
+A lightning-fast PvP coding platform built on the Monad testnet (EVM-compatible). Players battle in real-time coding challenges, staking tokens with fair resolution via oracle verifiers and instant on-chain rewards powered by Monad’s high-performance blockchain.  
 
-## 🎯 Overview
+## 🎯 Overview  
+BlitzNad fuses learning, gaming, and earning by motivating developers to sharpen coding skills, explore smart contract development on Monad, and compete for real rewards in a scalable, low-latency, trustless environment. With Monad’s parallel execution and near-instant finality, BlitzNad delivers a seamless competitive coding experience that traditional platforms can’t match.  
 
-BlitzNad combines learning, gaming, and earning by motivating developers to practice coding, learn smart contracts, and compete for real rewards in a trustless environment.
+## 🏗️ Architecture  
+BlitzNad/
+├── contracts/ # Smart contracts (Solidity, deployed on Monad)
+│ ├── src/
+│ ├── test/
+│ └── scripts/
+├── frontend/ # Next.js web application
+│ ├── src/
+│ ├── public/
+│ └── components/
+├── backend/ # Oracle service (Node.js)
+│ ├── src/
+│ ├── sandbox/
+│ └── api/
+└── shared/ # Shared types and utilities
+├── types/
+└── utils/
 
-## 🏗️ Architecture
+markdown
+Copy code
 
-```
-MonadSpeedCode/
-├── contracts/          # Smart contracts (Solidity)
-│   ├── src/
-│   ├── test/
-│   └── scripts/
-├── frontend/           # Next.js web application
-│   ├── src/
-│   ├── public/
-│   └── components/
-├── backend/            # Oracle service (Node.js)
-│   ├── src/
-│   ├── sandbox/
-│   └── api/
-└── shared/             # Shared types and utilities
-    ├── types/
-    └── utils/
-```
+## 🎮 Core Features  
+**Match Modes**  
+- Speed Solve: First correct solution wins  
+- Optimization Battle: Fastest runtime or lowest gas wins (showcasing Monad’s parallel performance)  
+- CTF (Future): Security-focused contract battles  
 
-## 🎮 Core Features
+**Smart Contracts**  
+- GameToken (ERC-20): Native staking/reward token $GAME on Monad  
+- Arena Contract: Match lifecycle, escrow, payouts with Monad’s low-latency settlement  
+- Badges (ERC-1155): Skill-based NFTs minted on Monad  
 
-### Match Modes
-- **Speed Solve**: First correct solution wins
-- **Optimization Battle**: Fastest runtime or lowest gas wins
-- **CTF (Future)**: Exploit/patch contracts faster than opponent
+**Player Features**  
+- Create and join matches with $GAME staking  
+- Submit solutions for oracle-based judging  
+- Earn rewards + on-chain NFT badges  
+- Leaderboards with ELO ranking (anchored on Monad)  
 
-### Smart Contracts
-- **GameToken (ERC-20)**: Native staking/reward token $GAME
-- **Arena Contract**: Match lifecycle, escrow, payouts
-- **Badges (ERC-1155)**: Achievement NFTs and trophies
+## 🛠️ Tech Stack  
+- Smart Contracts: Solidity, Hardhat, OpenZeppelin, deployed to Monad  
+- Frontend: Next.js, React, Tailwind CSS, wagmi/viem (Monad integration)  
+- Backend: Node.js, TypeScript, Docker sandbox, ethers.js  
+- Database: SQLite (for logs, rankings)  
+- Storage: IPFS/Pinata for prompts and test cases  
+- Blockchain: Monad testnet (EVM-compatible, high throughput, low latency)  
 
-### Player Features
-- Create and join matches with token staking
-- Submit solutions for off-chain judging
-- Earn rewards and NFT badges
-- Leaderboard with ELO ranking system
+## 📊 Monetization  
+- Protocol fee (2.5% per match)  
+- Premium membership → exclusive coding arenas  
+- Sponsored challenges (real-world coding tasks on Monad)  
+- NFT marketplace for badges & collectibles  
 
-## 🛠️ Tech Stack
-
-- **Smart Contracts**: Solidity, OpenZeppelin, Hardhat
-- **Frontend**: Next.js, React, Tailwind CSS, wagmi/viem
-- **Backend**: Node.js, TypeScript, Docker sandbox, ethers.js
-- **Database**: SQLite for match logs and ELO rankings
-- **Storage**: IPFS/Pinata for challenges and test cases
-- **Blockchain**: Monad testnet (EVM-compatible)
-
-## 🚀 Getting Started
-
-1. Install dependencies for each module
-2. Deploy smart contracts to Monad testnet
-3. Configure backend oracle service
-4. Start frontend development server
-
-## 📊 Monetization
-
-- Match fees (2.5% protocol fee)
-- Premium membership for exclusive challenges
-- Sponsored challenges from companies
-- NFT marketplace for badges and collectibles
-
-## 🎯 Goals
-
-- **Engagement**: Fun, competitive environment for developers
-- **Education**: Learn blockchain coding through real challenges
-- **Trustless Rewards**: Fair payouts via smart contracts
-- **Scalability**: Leverage Monad's high throughput and low latency
+## 🎯 Goals  
+- Engagement: Make coding fun, competitive, and rewarding  
+- Education: Hands-on pathway for devs to learn Monad smart contracts  
+- Trustless Rewards: Fair payouts secured by Monad’s EVM-compatible contracts  
+- Scalability: Exploit Monad’s parallel execution and fast finality to enable real-time coding ba

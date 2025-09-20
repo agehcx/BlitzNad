@@ -120,8 +120,13 @@ Note: Only one occurrence of the maximum element should be excluded from the sum
   const submitSolution = async () => {
     setIsRunning(true)
     setTimeout(() => {
-      setOutput("Solution submitted! Waiting for opponent...")
+      setOutput("Solution submitted! You win! 🏆")
       setIsRunning(false)
+      
+      // Redirect to result page after a short delay
+      setTimeout(() => {
+        window.location.href = '/result'
+      }, 1500)
     }, 1500)
   }
 

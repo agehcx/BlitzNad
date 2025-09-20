@@ -11,13 +11,17 @@ const GameTokenABI = [
 
 const ArenaABI = [
   "function createMatch(uint8 mode, uint256 stakeAmount, bytes32 challengeHash, uint256 timeLimit) returns (bytes32)",
-  "function joinMatch(bytes32 matchId)",
+  "function joinMatch(bytes32 matchId) payable",
   "function resolveMatch(bytes32 matchId, address winner, bytes calldata signature)",
   "function getMatch(bytes32 matchId) view returns (tuple(bytes32 id, address creator, address opponent, uint8 mode, uint256 stakeAmount, bytes32 challengeHash, uint8 status, address winner, uint256 createdAt, uint256 resolvedAt, uint256 timeLimit))",
   "function cancelMatch(bytes32 matchId)",
+  "function getEntryFee() view returns (uint256)",
+  "function getMempool() view returns (address)",
+  "function updateMempool(address newMempool)",
   "event MatchCreated(bytes32 indexed matchId, address indexed creator, uint8 mode, uint256 stakeAmount, bytes32 challengeHash)",
   "event MatchJoined(bytes32 indexed matchId, address indexed opponent)",
-  "event MatchResolved(bytes32 indexed matchId, address indexed winner, address indexed loser, uint256 payout)"
+  "event MatchResolved(bytes32 indexed matchId, address indexed winner, address indexed loser, uint256 payout)",
+  "event EntryFeePaid(address indexed player, bytes32 indexed matchId, uint256 amount)"
 ];
 
 const BadgesABI = [
@@ -151,6 +155,15 @@ export class BlockchainService {
         winner,
         loser,
         payout: payout.toString(),
+        blockNumber: event.blockNumber
+      });
+    });
+
+    this.arena.on('EntryFeePaid', (player, matchId, amount, event) => {
+      logger.info('Entry fee paid on-chain:', {
+        player,
+        matchId,
+        amount: amount.toString(),
         blockNumber: event.blockNumber
       });
     });
@@ -316,6 +329,36 @@ export class BlockchainService {
       return gasEstimate.toString();
     } catch (error) {
       logger.error('Error estimating gas:', { to, data, error });
+      throw error;
+    }
+  }
+
+  async getEntryFee(): Promise<string> {
+    if (!this.arena) {
+      logger.warn('Arena contract not initialized. Returning default entry fee.');
+      return '25000000000000000'; // 0.025 ETH in wei
+    }
+
+    try {
+      const entryFee = await this.arena.getEntryFee();
+      return entryFee.toString();
+    } catch (error) {
+      logger.error('Error fetching entry fee:', error);
+      throw error;
+    }
+  }
+
+  async getMempoolAddress(): Promise<string> {
+    if (!this.arena) {
+      logger.warn('Arena contract not initialized. Returning zero address.');
+      return '0x0000000000000000000000000000000000000000';
+    }
+
+    try {
+      const mempool = await this.arena.getMempool();
+      return mempool;
+    } catch (error) {
+      logger.error('Error fetching mempool address:', error);
       throw error;
     }
   }
