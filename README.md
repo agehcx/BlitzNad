@@ -5,6 +5,7 @@ A lightning-fast PvP coding platform built on the Monad testnet (EVM-compatible)
 ## 🎯 Overview  
 BlitzNad fuses learning, gaming, and earning by motivating developers to sharpen coding skills, explore smart contract development on Monad, and compete for real rewards in a scalable, low-latency, trustless environment. With Monad’s parallel execution and near-instant finality, BlitzNad delivers a seamless competitive coding experience that traditional platforms can’t match.  
 
+```
 ## 🏗️ Architecture  
 BlitzNad/
 ├── contracts/ # Smart contracts (Solidity, deployed on Monad)
@@ -22,6 +23,7 @@ BlitzNad/
 └── shared/ # Shared types and utilities
 ├── types/
 └── utils/
+```
 
 markdown
 Copy code
